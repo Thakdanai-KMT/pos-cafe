@@ -1,0 +1,30 @@
+<mat-toolbar color="primary">
+  <span>POS Cafe Dashboard</span>
+  <span class="spacer"></span>
+  <span class="username">ยินดีต้อนรับ, {{ username }}</span>
+  <button mat-button color="warn" (click)="logout()">ล็อกเอาต์</button>
+</mat-toolbar>
+
+<div class="container">
+  <mat-card class="summary-card">
+    <mat-card-title>ยอดขายวันนี้</mat-card-title>
+    <mat-card-content>
+      <h2>฿{{ todaySales | number }}</h2>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="action-buttons">
+    <button mat-raised-button color="accent" routerLink="/orders">ออเดอร์</button>
+    <button mat-raised-button color="accent" routerLink="/products">สินค้า</button>
+    <button mat-raised-button color="accent" routerLink="/reports">รายงาน</button>
+  </div>
+
+  <mat-card class="summary-card">
+    <mat-card-title>สินค้าขายดี</mat-card-title>
+    <mat-list>
+      <mat-list-item *ngFor="let product of topProducts">
+        {{ product.name }} - {{ product.totalSold }} ชิ้น
+      </mat-list-item>
+    </mat-list>
+  </mat-card>
+</div>
