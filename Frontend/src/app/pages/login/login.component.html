@@ -1,19 +1,37 @@
-<div class="login-container">
-  <h2>เข้าสู่ระบบ</h2>
+<div class="login-container neumorphic neumorphic-card">
+  <h1 class="neumorphic-title">เข้าสู่ระบบ</h1>
   
-  <form (ngSubmit)="login()" #loginForm="ngForm">
-    <div class="form-group">
-      <label for="loginId">เบอร์โทร หรือชื่อผู้ใช้</label>
-      <input type="text" id="loginId" [(ngModel)]="loginId" name="loginId" required />
+  <form (ngSubmit)="login()" #loginForm="ngForm" class="neumorphic-form">
+    <div class="form-group neumorphic-input-container">
+      <label for="loginId" class="neumorphic-label">เบอร์โทร หรือชื่อผู้ใช้</label>
+      <input 
+        type="text" 
+        id="loginId" 
+        class="neumorphic neumorphic-input"
+        [(ngModel)]="loginId" 
+        name="loginId" 
+        required 
+        placeholder="กรุณาใส่เบอร์โทรหรือชื่อผู้ใช้" />
     </div>
 
-    <div class="form-group">
-      <label for="password">รหัสผ่าน</label>
-      <input type="password" id="password" [(ngModel)]="password" name="password" required />
+    <div class="form-group neumorphic-input-container">
+      <label for="password" class="neumorphic-label">รหัสผ่าน</label>
+      <input 
+        type="password" 
+        id="password" 
+        class="neumorphic neumorphic-input"
+        [(ngModel)]="password" 
+        name="password" 
+        required
+        placeholder="กรุณาใส่รหัสผ่าน" />
     </div>
 
-    <div class="errorMessage" *ngIf="errorMessage">{{ errorMessage }}</div>
+    <div class="error-message neumorphic-inset" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
 
-    <button type="submit">เข้าสู่ระบบ</button>
+    <button type="submit" class="neumorphic neumorphic-button">
+      เข้าสู่ระบบ
+    </button>
   </form>
 </div>

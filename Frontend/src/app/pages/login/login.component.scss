@@ -1,62 +1,111 @@
+// ตัวแปรสี
+$base-color: #e0e5ec;
+$shadow-dark: rgba(163, 177, 198, 0.6);
+$shadow-light: rgba(255, 255, 255, 0.8);
+$error-color: #ff6b6b;
+
+// Mixins
+@mixin neumorphic {
+  background: $base-color;
+  border-radius: 10px;
+  box-shadow: 
+    8px 8px 15px $shadow-dark,
+    -8px -8px 15px $shadow-light;
+}
+
+@mixin neumorphic-inset {
+  background: $base-color;
+  border-radius: 10px;
+  box-shadow: 
+    inset 4px 4px 8px $shadow-dark,
+    inset -4px -4px 8px $shadow-light;
+}
+
+@mixin neumorphic-pressed {
+  box-shadow: 
+    inset 6px 6px 10px $shadow-dark,
+    inset -6px -6px 10px $shadow-light;
+}
+
+// สไตล์หลัก
 .login-container {
+  @include neumorphic;
+  padding: 2rem;
   max-width: 400px;
-  margin: 80px auto;
-  padding: 30px;
-  border-radius: 12px;
-  background-color: #fff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  font-family: 'Segoe UI', sans-serif;
+  margin: 2rem auto;
+  text-align: center;
 
-  h2 {
-    text-align: center;
-    margin-bottom: 24px;
-    color: #333;
+  .neumorphic-title {
+    color: #555;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 2px $shadow-light;
   }
 
-  .form-group {
-    margin-bottom: 16px;
-
-    label {
-      display: block;
-      margin-bottom: 6px;
-      color: #555;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 16px;
-
-      &:focus {
-        border-color: #3f51b5;
-        outline: none;
-        box-shadow: 0 0 5px rgba(63, 81, 181, 0.2);
-      }
-    }
+  .neumorphic-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
-  .error {
-    color: red;
-    font-size: 14px;
-    margin-bottom: 16px;
-    text-align: center;
+  .neumorphic-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: left;
   }
 
-  button {
-    width: 100%;
-    padding: 12px;
-    background-color: #3f51b5;
+  .neumorphic-label {
+    color: #555;
+    font-size: 0.9rem;
+    margin-left: 0.5rem;
+  }
+
+  .neumorphic-input {
+    @include neumorphic-inset;
+    padding: 12px 15px;
     border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 16px;
+    outline: none;
+    font-size: 1rem;
+    color: #555;
+    transition: all 0.3s ease;
+
+    &:focus {
+      @include neumorphic-pressed;
+    }
+
+    &::placeholder {
+      color: #aaa;
+    }
+  }
+
+  .error-message {
+    @include neumorphic-inset;
+    color: $error-color;
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+  }
+
+  .neumorphic-button {
+    @include neumorphic;
+    padding: 12px 0;
+    border: none;
     cursor: pointer;
-    transition: background 0.3s ease;
+    font-size: 1rem;
+    color: #555;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
 
     &:hover {
-      background-color: #303f9f;
+      transform: translateY(-2px);
+      box-shadow: 
+        10px 10px 20px $shadow-dark,
+        -10px -10px 20px $shadow-light;
+    }
+
+    &:active {
+      @include neumorphic-pressed;
+      transform: translateY(0);
     }
   }
 }
