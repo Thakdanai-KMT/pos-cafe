@@ -1,111 +1,88 @@
-// ตัวแปรสี
-$base-color: #e0e5ec;
-$shadow-dark: rgba(163, 177, 198, 0.6);
-$shadow-light: rgba(255, 255, 255, 0.8);
-$error-color: #ff6b6b;
+$bg-color: #f3ece7;
+$primary-color: #8b5e3c;
+$input-bg: #ede0d4;
+$shadow-light: #ffffff;
+$shadow-dark: #c2b8b1;
+$error-bg: #fbe4e4;
+$error-text: #a33a3a;
 
-// Mixins
-@mixin neumorphic {
-  background: $base-color;
-  border-radius: 10px;
-  box-shadow: 
-    8px 8px 15px $shadow-dark,
-    -8px -8px 15px $shadow-light;
-}
-
-@mixin neumorphic-inset {
-  background: $base-color;
-  border-radius: 10px;
-  box-shadow: 
-    inset 4px 4px 8px $shadow-dark,
-    inset -4px -4px 8px $shadow-light;
-}
-
-@mixin neumorphic-pressed {
-  box-shadow: 
-    inset 6px 6px 10px $shadow-dark,
-    inset -6px -6px 10px $shadow-light;
-}
-
-// สไตล์หลัก
 .login-container {
-  @include neumorphic;
-  padding: 2rem;
   max-width: 400px;
-  margin: 2rem auto;
+  margin: 80px auto;
+  padding: 40px;
+  border-radius: 20px;
+  background: $bg-color;
+  box-shadow: 20px 20px 60px $shadow-dark, -20px -20px 60px $shadow-light;
   text-align: center;
+  font-family: 'Kanit', sans-serif;
+}
 
-  .neumorphic-title {
-    color: #555;
-    margin-bottom: 1.5rem;
-    text-shadow: 1px 1px 2px $shadow-light;
+.neumorphic-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: $primary-color;
+  margin-bottom: 2rem;
+}
+
+.neumorphic-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.neumorphic-input-container {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.neumorphic-label {
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+  color: darken($primary-color, 10%);
+}
+
+.neumorphic-input {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: $input-bg;
+  box-shadow: inset 5px 5px 10px $shadow-dark, inset -5px -5px 10px $shadow-light;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: $primary-color;
+
+  &:focus {
+    box-shadow: inset 2px 2px 6px $shadow-dark, inset -2px -2px 6px $shadow-light;
+  }
+}
+
+.neumorphic-button {
+  padding: 12px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  background: $primary-color;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 5px 5px 15px rgba(139, 94, 60, 0.4), -5px -5px 15px rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: darken($primary-color, 5%);
+    box-shadow: inset 5px 5px 10px rgba(139, 94, 60, 0.4), inset -5px -5px 10px rgba(255, 255, 255, 0.7);
   }
 
-  .neumorphic-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+  &:active {
+    transform: scale(0.98);
   }
+}
 
-  .neumorphic-input-container {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    text-align: left;
-  }
-
-  .neumorphic-label {
-    color: #555;
-    font-size: 0.9rem;
-    margin-left: 0.5rem;
-  }
-
-  .neumorphic-input {
-    @include neumorphic-inset;
-    padding: 12px 15px;
-    border: none;
-    outline: none;
-    font-size: 1rem;
-    color: #555;
-    transition: all 0.3s ease;
-
-    &:focus {
-      @include neumorphic-pressed;
-    }
-
-    &::placeholder {
-      color: #aaa;
-    }
-  }
-
-  .error-message {
-    @include neumorphic-inset;
-    color: $error-color;
-    padding: 10px;
-    font-size: 0.9rem;
-    border-radius: 5px;
-  }
-
-  .neumorphic-button {
-    @include neumorphic;
-    padding: 12px 0;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #555;
-    transition: all 0.2s ease;
-    margin-top: 1rem;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 
-        10px 10px 20px $shadow-dark,
-        -10px -10px 20px $shadow-light;
-    }
-
-    &:active {
-      @include neumorphic-pressed;
-      transform: translateY(0);
-    }
-  }
+.error-message {
+  padding: 10px;
+  background: $error-bg;
+  color: $error-text;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  box-shadow: inset 2px 2px 6px $shadow-dark, inset -2px -2px 6px $shadow-light;
 }

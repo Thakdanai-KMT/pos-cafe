@@ -3,17 +3,21 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./routes/authRoutes');
+const dashboardRoutes = require('./routes/dashboard');
 
-const app = express();
+const app = express(); // ✅  app.use
+
 app.use(cors());
 app.use(express.json());
 
-// ✅ ตรงนี้คือส่วนที่เพิ่ม
+// ✅ Routes
+app.use('/api', authRoutes);
+app.use('/dashboard', dashboardRoutes);
+
+// ✅ Test route
 app.get('/', (req, res) => {
   res.send('✅ Backend is running!');
 });
-
-app.use('/api', authRoutes);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

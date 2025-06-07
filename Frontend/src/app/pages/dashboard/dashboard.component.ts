@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-// Material Modules ที่คุณใช้
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { NavbarComponent } from '../../service/navbar/navbar.component';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -15,7 +15,8 @@ import { MatListModule } from '@angular/material/list';
     MatToolbarModule,
     MatCardModule,
     MatButtonModule,
-    MatListModule
+    MatListModule,
+    NavbarComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']

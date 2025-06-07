@@ -1,0 +1,17 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav mode="side" opened class="sidenav">
+    <div class="logo">
+      <h2>My Cafe</h2>
+    </div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/dashboard">แดชบอร์ด</a>
+      <a mat-list-item routerLink="/orders">ออเดอร์</a>
+      <a mat-list-item routerLink="/menu">เมนู</a>
+      <a mat-list-item routerLink="/reports">รายงาน</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="content">
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
