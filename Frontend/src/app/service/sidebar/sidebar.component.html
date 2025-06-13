@@ -1,5 +1,21 @@
-<nav class="p-4 bg-gray-800 text-white h-full">
-      <a routerLink="/dashboard" class="block mb-2">Dashboard</a>
-      <a routerLink="/menu" class="block mb-2">Menu</a>
-      <a routerLink="/report" class="block mb-2">Report</a>
-    </nav>
+<nav [class.collapsed]="isCollapsed" class="sidebar">
+  <!-- Toggle Button -->
+  <button (click)="toggleSidebar()" class="toggle-btn">
+    <span *ngIf="!isCollapsed">⬅️</span>
+    <span *ngIf="isCollapsed">➡️</span>
+  </button>
+
+  <!-- Menu Links -->
+  <a routerLink="/dashboard" class="menu-item">
+    🧭
+    <span *ngIf="!isCollapsed">Dashboard</span>
+  </a>
+  <a routerLink="/menu" class="menu-item">
+    📋
+    <span *ngIf="!isCollapsed">Menu</span>
+  </a>
+  <a routerLink="/report" class="menu-item">
+    📊
+    <span *ngIf="!isCollapsed">Report</span>
+  </a>
+</nav>
