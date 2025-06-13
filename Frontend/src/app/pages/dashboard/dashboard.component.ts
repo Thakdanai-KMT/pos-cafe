@@ -6,7 +6,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
-import { NavbarComponent } from '../../service/navbar/navbar.component';
+// import { NavbarComponent } from '../../service/navbar/navbar.component';
 @Component({
   selector: 'app-dashboard',
   imports: [
@@ -16,7 +16,7 @@ import { NavbarComponent } from '../../service/navbar/navbar.component';
     MatCardModule,
     MatButtonModule,
     MatListModule,
-    NavbarComponent
+    
   ],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
