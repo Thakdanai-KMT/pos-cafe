@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router'; // เพิ่ม
+import { Router } from '@angular/router';
+import { AuthService } from '../../service/auth.service';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -10,30 +12,36 @@ import { Router } from '@angular/router'; // เพิ่ม
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent {
-  loginId = '';  // จะใส่ username หรือ phone ก็ได้
+export class LoginComponent implements OnInit {
+  loginId = '';
   password = '';
   errorMessage = '';
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    private auth: AuthService
+  ) {}
 
-login() {
-  this.http.post('http://localhost:4000/api/login', {
-    loginId: this.loginId, // ใช้ username หรือ phone ได้เลย
-    password: this.password
-  }).subscribe({
-    next: (res: any) => {
-      console.log('Login success:', res);
-      this.errorMessage = '';
-     this.router.navigate(['/dashboard']); // ใช้ Router ที่ถูกต้อง
-      // เก็บ token หรือ navigate ได้
-    },
-    error: (err) => {
-      console.error('Login failed:', err);
-      this.errorMessage = err.error?.message || 'เข้าสู่ระบบล้มเหลว';
+  ngOnInit(): void {
+    // ถ้า login แล้วให้ redirect ไป dashboard ทันที
+    if (this.auth.isLoggedIn()) {
+      this.router.navigate(['/dashboard']);
     }
-  });
-}
+  }
 
-
+  login() {
+    this.http.post('http://localhost:4000/api/login', {
+      loginId: this.loginId,
+      password: this.password
+    }).subscribe({
+      next: (res: any) => {
+        this.auth.saveLogin(res.token, res.user); // ✅ บันทึก token/user
+        this.router.navigate(['/dashboard']);     // ✅ ไปหน้า Dashboard
+      },
+      error: (err) => {
+        this.errorMessage = err.error?.message || 'เข้าสู่ระบบล้มเหลว';
+      }
+    });
+  }
 }

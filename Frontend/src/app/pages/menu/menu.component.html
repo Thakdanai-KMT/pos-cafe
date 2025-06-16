@@ -1,1 +1,45 @@
-<p>menu works!</p>
+<div class="menu-container">
+    <!-- ฝั่งซ้าย 70% เมนูพร้อมรูป -->
+    <div class="menu-list">
+        <h2>เมนูสินค้า</h2>
+        <div class="menu-item" *ngFor="let item of menuItems"
+            (click)="addToOrder(item)">
+            <img [src]="item.image" alt="{{item.name}}" class="menu-image" />
+            <div class="menu-info">
+                <div class="menu-name">{{ item.name }}</div>
+                <div class="menu-price">{{ item.sale_price }} บาท</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ฝั่งขวา 30% รายการที่เลือก -->
+    <div class="order-summary">
+        <h2>รายการที่เลือก</h2>
+
+        <div *ngIf="orderItems.length === 0">ยังไม่มีสินค้าในคำสั่งซื้อ</div>
+
+        <div class="order-item" *ngFor="let item of orderItems">
+            <div class="item-name">{{ item.name }}</div>
+            <div class="item-controls">
+                <button (click)="decrease(item)">–</button>
+                <span>{{ item.quantity }}</span>
+                <button (click)="increase(item)">+</button>
+                <span>{{ item.sale_price * item.quantity }} บาท</span>
+                <button (click)="remove(item)">ยกเลิก</button>
+            </div>
+        </div>
+
+        <div class="order-total">
+            <strong>รวม:</strong> {{ getTotal() }} บาท
+        </div>
+        <div class="order-actions">
+            <button (click)="clearOrder()" class="clear-button">
+                ❌ ล้างคำสั่งซื้อ
+            </button>
+
+            <button class="confirm-button" (click)="confirmOrder()"
+                [disabled]="orderItems.length === 0">
+                ✅ ยืนยันคำสั่งซื้อ
+            </button>
+        </div>
+    </div>

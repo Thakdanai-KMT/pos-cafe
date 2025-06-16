@@ -1,0 +1,249 @@
+/* ฟอนต์และพื้นหลัง */
+:host {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #fafafa;
+  color: #333;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 30px;
+}
+
+/* Layout หลัก */
+.menu-container {
+display: flex;
+  height: 100vh;
+  width: 100vw;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
+  overflow: hidden;
+}
+
+/* เมนูฝั่งซ้าย 70% */
+.menu-list {
+  width: 1000px;
+  padding: 30px 40px;
+  border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  background: #fefefe;
+}
+
+.menu-list h2 {
+  width: 100%;
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+/* การ์ดเมนู */
+.menu-item {
+  cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
+  background: white;
+  width: calc(50% - 25px);
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.menu-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.12);
+  border-color: #27ae60;
+}
+
+.menu-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 15px;
+  margin-right: 25px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+}
+
+.menu-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.menu-name {
+  font-weight: 700;
+  font-size: 20px;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  user-select: none;
+}
+
+.menu-price {
+  font-size: 16px;
+  color: #27ae60;
+  font-weight: 600;
+  user-select: none;
+}
+
+/* รายการที่เลือกฝั่งขวา 30% */
+.order-summary {
+  width: 1000px;
+  padding: 30px 30px;
+  display: flex;
+  flex-direction: column;
+  background: #f9f9f9;
+}
+
+.order-summary h2 {
+  font-size: 26px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 20px;
+  user-select: none;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 10px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 0.08);
+  user-select: none;
+  transition: background-color 0.15s ease;
+}
+
+.order-item:hover {
+  background-color: #e9f5ea;
+}
+
+.item-name {
+  font-weight: 600;
+  font-size: 17px;
+  color: #34495e;
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.item-controls button {
+  background: #27ae60;
+  border: none;
+  color: white;
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.item-controls button:hover {
+  background-color: #1e8449;
+}
+
+.item-controls span {
+  min-width: 28px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #2c3e50;
+  user-select: none;
+}
+
+.item-controls button:last-child {
+  background-color: #e74c3c;
+  font-size: 14px;
+  width: auto;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.item-controls button:last-child:hover {
+  background-color: #c0392b;
+}
+
+.order-total {
+  margin-top: auto;
+  font-size: 22px;
+  font-weight: 700;
+  color: #27ae60;
+  text-align: right;
+  margin-bottom: 25px;
+  user-select: none;
+}
+
+/* ปุ่มยืนยัน */
+.confirm-button {
+  align-self: flex-end;
+  background-color: #27ae60;
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+
+.confirm-button:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
+}
+
+.confirm-button:not(:disabled):hover {
+  background-color: #1e8449;
+}
+.clear-button {
+  background-color: #e74c3c;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  
+  transition: background-color 0.3s ease;
+}
+
+.clear-button:hover {
+  background-color: #c0392b;
+}
+
+.order-actions {
+  padding: 20px; /* เพิ่มช่องว่างภายในรอบๆ เนื้อหาใน order-actions */
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  border-top: 1px solid #ddd;
+  box-sizing: border-box; /* ให้ padding รวมอยู่ในขนาดกล่อง */
+}
+.item-total {
+  margin-left: 20px; /* ระยะห่างพิเศษจากปุ่ม + มายังราคาทั้งหมด */
+  font-weight: bold;
+  color: #333;
+}

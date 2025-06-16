@@ -40,6 +40,7 @@
     text-decoration: none;
     color: white;
     transition: background-color 0.2s ease;
+    
 
     &:hover {
       background-color: #374151; // สี hover
@@ -50,4 +51,7 @@
       height: 20px;
     }
   }
+}
+.menu-item {
+
 }
