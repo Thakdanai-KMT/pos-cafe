@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $bg-color: #f3ece7;
 $primary-color: #8b5e3c;
 $input-bg: #ede0d4;
@@ -6,15 +8,136 @@ $shadow-dark: #c2b8b1;
 $error-bg: #fbe4e4;
 $error-text: #a33a3a;
 
+/* Background Animation */
+body {
+  margin: 0;
+  background: linear-gradient(to top, #dfe9f3 0%, #ffffff 100%);
+  overflow: hidden;
+}
+
+.cloud-background {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.cloud {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: floatCloud 60s linear infinite;
+
+  span {
+    display: block;
+    background: #75c1ff;
+    border-radius: 50%;
+    opacity: 0.6;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    margin: 0 4px;
+  }
+}
+
+.cloud1 {
+  top: 50px;
+  left: -300px;
+  animation-duration: 50s;
+
+  span:nth-child(1) {
+    width: 60px;
+    height: 60px;
+  }
+  span:nth-child(2) {
+    width: 80px;
+    height: 80px;
+    margin-top: -10px;
+  }
+  span:nth-child(3) {
+    width: 60px;
+    height: 60px;
+  }
+  span:nth-child(4) {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+  }
+}
+
+.cloud2 {
+  top: 120px;
+  left: -400px;
+  animation-duration: 70s;
+
+  span {
+    width: 50px;
+    height: 50px;
+  }
+  span:nth-child(2) {
+    width: 90px;
+    height: 90px;
+    margin-top: -15px;
+  }
+  span:nth-child(3) {
+    width: 70px;
+    height: 70px;
+  }
+  span:nth-child(4) {
+    width: 55px;
+    height: 55px;
+    margin-top: 5px;
+  }
+}
+
+.cloud3 {
+  top: 200px;
+  left: -300px;
+  animation-duration: 60s;
+
+  span {
+    width: 40px;
+    height: 40px;
+  }
+  span:nth-child(2) {
+    width: 70px;
+    height: 70px;
+    margin-top: -10px;
+  }
+  span:nth-child(3) {
+    width: 50px;
+    height: 50px;
+  }
+  span:nth-child(4) {
+    width: 45px;
+    height: 45px;
+    margin-top: 5px;
+  }
+}
+
+@keyframes floatCloud {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(200vw);
+  }
+}
+
+
+/* Neumorphic Form */
 .login-container {
   max-width: 400px;
-  margin: 80px auto;
+  margin: 100px auto;
   padding: 40px;
   border-radius: 20px;
   background: $bg-color;
   box-shadow: 20px 20px 60px $shadow-dark, -20px -20px 60px $shadow-light;
   text-align: center;
   font-family: 'Kanit', sans-serif;
+  position: relative;
+  z-index: 10;
 }
 
 .neumorphic-title {
@@ -39,7 +162,7 @@ $error-text: #a33a3a;
 .neumorphic-label {
   font-size: 0.9rem;
   margin-bottom: 6px;
-  color: darken($primary-color, 10%);
+  color: color.adjust($primary-color, $lightness: -10%);
 }
 
 .neumorphic-input {
@@ -69,7 +192,7 @@ $error-text: #a33a3a;
   transition: all 0.2s ease;
 
   &:hover {
-    background: darken($primary-color, 5%);
+    background: color.adjust($primary-color, $lightness: -5%);
     box-shadow: inset 5px 5px 10px rgba(139, 94, 60, 0.4), inset -5px -5px 10px rgba(255, 255, 255, 0.7);
   }
 
@@ -85,4 +208,20 @@ $error-text: #a33a3a;
   border-radius: 10px;
   font-size: 0.9rem;
   box-shadow: inset 2px 2px 6px $shadow-dark, inset -2px -2px 6px $shadow-light;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .login-container {
+    margin: 40px 20px;
+    padding: 30px 20px;
+  }
+
+  .neumorphic-title {
+    font-size: 1.5rem;
+  }
+
+  .neumorphic-button {
+    font-size: 0.9rem;
+  }
 }
