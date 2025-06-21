@@ -1,59 +1,63 @@
 const express = require('express');
-const supabase = require('../supabaseClient');
+const multer = require('multer'); // middleware สำหรับรับ multipart/form-data
+const { createClient } = require('@supabase/supabase-js');
 const router = express.Router();
 
-function formatDate(date) {
-  return date.toISOString().split('T')[0]; // YYYY-MM-DD
-}
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
 
-router.get('/summary', async (req, res) => {
+// ตั้งค่า multer เก็บไฟล์ชั่วคราวใน memory
+const upload = multer({ storage: multer.memoryStorage() });
+
+// POST /api/products/upload - อัปโหลดรูปภาพพร้อมข้อมูลสินค้า
+router.post('/upload', upload.single('image'), async (req, res) => {
   try {
-    const now = new Date();
+    const file = req.file; // ไฟล์ภาพที่รับมา
+    const { name, price } = req.body; // ข้อมูลสินค้าอื่น ๆ
 
-    // วันที่ปัจจุบัน
-    const today = formatDate(now);
+    if (!file) {
+      return res.status(400).json({ error: 'No image file uploaded' });
+    }
 
-    // เดือนปัจจุบัน (เช่น 2025-06-01)
-    const firstDayOfMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`;
+    // ตั้งชื่อไฟล์เพื่ออัปโหลดใน Storage
+    const fileExt = file.originalname.split('.').pop();
+    const fileName = `${Date.now()}.${fileExt}`;
 
-    // ปีปัจจุบัน (เช่น 2025-01-01)
-    const firstDayOfYear = `${now.getFullYear()}-01-01`;
+    // อัปโหลดไฟล์ไป Supabase Storage bucket 'images'
+    const { error: uploadError } = await supabase.storage
+      .from('images')
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false,
+      });
 
-    // ==== ยอดขาย (orders.total_amount) ====
+    if (uploadError) {
+      return res.status(500).json({ error: uploadError.message });
+    }
 
-    const [salesToday, salesMonth, salesYear] = await Promise.all([
-      supabase.from('orders').select('total_amount').gte('created_at', `${today}T00:00:00+07:00`),
-      supabase.from('orders').select('total_amount').gte('created_at', `${firstDayOfMonth}T00:00:00+07:00`),
-      supabase.from('orders').select('total_amount').gte('created_at', `${firstDayOfYear}T00:00:00+07:00`)
-    ]);
+    // ดึง public URL ของไฟล์
+    const { publicURL, error: urlError } = supabase.storage
+      .from('images')
+      .getPublicUrl(fileName);
 
-    // ==== ค่าใช้จ่าย (expenses.amount) ====
+    if (urlError) {
+      return res.status(500).json({ error: urlError.message });
+    }
 
-    const [expensesToday, expensesMonth, expensesYear] = await Promise.all([
-      supabase.from('expenses').select('amount').eq('expense_date', today),
-      supabase.from('expenses').select('amount').gte('expense_date', firstDayOfMonth),
-      supabase.from('expenses').select('amount').gte('expense_date', firstDayOfYear)
-    ]);
+    // บันทึกข้อมูลสินค้าและ URL ลงในตาราง products
+    const { data, error: insertError } = await supabase
+      .from('products')
+      .insert([{ name, price, image_url: publicURL }]);
 
-    // === คำนวณยอดรวม ===
-    const sum = (arr, field) => arr.data?.reduce((sum, item) => sum + Number(item[field] || 0), 0);
+    if (insertError) {
+      return res.status(500).json({ error: insertError.message });
+    }
 
-    res.json({
-      sales: {
-        today: sum(salesToday, 'total_amount'),
-        month: sum(salesMonth, 'total_amount'),
-        year: sum(salesYear, 'total_amount')
-      },
-      expenses: {
-        today: sum(expensesToday, 'amount'),
-        month: sum(expensesMonth, 'amount'),
-        year: sum(expensesYear, 'amount')
-      }
-    });
-
-  } catch (err) {
-    console.error('Dashboard error:', err);
-    res.status(500).json({ message: 'เกิดข้อผิดพลาด', error: err.message });
+    res.status(201).json({ message: 'Product created', product: data[0] });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 

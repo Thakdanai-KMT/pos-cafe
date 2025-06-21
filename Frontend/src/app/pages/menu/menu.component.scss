@@ -12,12 +12,12 @@
 
 /* Layout หลัก */
 .menu-container {
-display: flex;
-  height: 100vh;
-  width: 100vw;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  height: auto;
+  min-height: 100vh;
   background: white;
   border-radius: 12px;
   box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
@@ -26,13 +26,13 @@ display: flex;
 
 /* เมนูฝั่งซ้าย 70% */
 .menu-list {
-  width: 1000px;
-  padding: 30px 40px;
-  border-right: 1px solid #e0e0e0;
+  flex: 1 1 60%;
+  padding: 30px;
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
   background: #fefefe;
+  box-sizing: border-box;
 }
 
 .menu-list h2 {
@@ -45,11 +45,11 @@ display: flex;
 
 /* การ์ดเมนู */
 .menu-item {
+  width: calc(50% - 20px); /* 2 columns */
   cursor: pointer;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
   background: white;
-  width: calc(50% - 25px);
   display: flex;
   align-items: center;
   padding: 15px 20px;
@@ -96,11 +96,12 @@ display: flex;
 
 /* รายการที่เลือกฝั่งขวา 30% */
 .order-summary {
-  width: 1000px;
-  padding: 30px 30px;
+  flex: 1 1 40%;
+  padding: 30px;
   display: flex;
   flex-direction: column;
   background: #f9f9f9;
+  box-sizing: border-box;
 }
 
 .order-summary h2 {
@@ -208,7 +209,6 @@ display: flex;
   user-select: none;
 }
 
-
 .confirm-button:disabled {
   background-color: #a5d6a7;
   cursor: not-allowed;
@@ -217,6 +217,7 @@ display: flex;
 .confirm-button:not(:disabled):hover {
   background-color: #1e8449;
 }
+
 .clear-button {
   background-color: #e74c3c;
   color: white;
@@ -226,7 +227,6 @@ display: flex;
   cursor: pointer;
   font-size: 18px;
   font-weight: 700;
-  
   transition: background-color 0.3s ease;
 }
 
@@ -235,15 +235,103 @@ display: flex;
 }
 
 .order-actions {
-  padding: 20px; /* เพิ่มช่องว่างภายในรอบๆ เนื้อหาใน order-actions */
+  padding: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 15px;
   border-top: 1px solid #ddd;
-  box-sizing: border-box; /* ให้ padding รวมอยู่ในขนาดกล่อง */
+  box-sizing: border-box;
 }
+
 .item-total {
-  margin-left: 20px; /* ระยะห่างพิเศษจากปุ่ม + มายังราคาทั้งหมด */
+  margin-left: 20px;
   font-weight: bold;
   color: #333;
+}
+
+/* แสดงผลสำหรับแท็บเล็ต */
+@media (max-width: 1024px) {
+  .menu-container {
+    flex-direction: column;
+  }
+
+  .menu-list,
+  .order-summary {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .menu-item {
+    width: 100%;
+  }
+
+  .order-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .confirm-button,
+  .clear-button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+/* แสดงผลมือถือ */
+@media (max-width: 600px) {
+  .menu-list,
+  .order-summary {
+    padding: 15px;
+    max-height: 80vh;
+    overflow-y: auto;
+  }
+
+  .menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .menu-image {
+    width: 80px;
+    height: 80px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .menu-name {
+    font-size: 16px;
+  }
+
+  .menu-price {
+    font-size: 14px;
+  }
+
+  .item-controls {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .item-controls button {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+  }
+
+  .clear-button,
+  .confirm-button {
+    font-size: 16px;
+    padding: 10px 20px;
+    width: 100%;
+  }
+
+  .order-total {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .item-name {
+    max-width: 100%;
+  }
 }
