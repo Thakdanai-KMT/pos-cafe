@@ -7,6 +7,8 @@ import { MatListModule } from '@angular/material/list';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { PopupconfirmComponent } from '../../service/popupconfirm/popupconfirm.component';
+import {  PopupService } from '../../service/popupconfirm/popupconfirm.component.service';
 interface MenuItem {
   id: string;
   name: string;
@@ -27,38 +29,40 @@ interface OrderItem extends MenuItem {
 
 @Component({
   selector: 'app-menu',
-  imports: [NgIf,
-      CommonModule,
+  imports: [
+    NgIf,
+    CommonModule,
     RouterModule,
     FormsModule,
     MatToolbarModule,
     MatCardModule,
     MatButtonModule,
-    MatListModule,],
+    MatListModule,
+  ],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
   standalone: true,
+  providers: [PopupService],
 })
 export class MenuComponent implements OnInit {
   menuItems: MenuItem[] = [];
   orderItems: OrderItem[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private popupService: PopupService) {}
 
   ngOnInit(): void {
     this.fetchMenuItems();
   }
 
   fetchMenuItems() {
-    this.http.get<MenuItem[]>('http://localhost:4000/api/products')
-      .subscribe({
-        next: (data) => {
-          this.menuItems = data;
-        },
-        error: (err) => {
-          console.error('❌ ดึงข้อมูลเมนูล้มเหลว:', err);
-        }
-      });
+    this.http.get<MenuItem[]>('http://localhost:4000/api/products').subscribe({
+      next: (data) => {
+        this.menuItems = data;
+      },
+      error: (err) => {
+        console.error('❌ ดึงข้อมูลเมนูล้มเหลว:', err);
+      },
+    });
   }
 
   clearOrder() {
@@ -66,7 +70,7 @@ export class MenuComponent implements OnInit {
   }
 
   addToOrder(item: MenuItem) {
-    const existing = this.orderItems.find(i => i.id === item.id);
+    const existing = this.orderItems.find((i) => i.id === item.id);
     if (existing) {
       existing.quantity++;
     } else {
@@ -87,12 +91,15 @@ export class MenuComponent implements OnInit {
   }
 
   remove(item: OrderItem) {
-    this.orderItems = this.orderItems.filter(i => i.id !== item.id);
+    this.orderItems = this.orderItems.filter((i) => i.id !== item.id);
   }
 
-  confirmOrder() {
-    alert('✅ ยืนยันคำสั่งซื้อเรียบร้อยแล้ว!');
-    this.orderItems = [];
+  async confirmOrder() {
+    const confirmed = await this.popupService.confirm('ยืนยันการสั้งซื้อ?');
+    if (confirmed) {
+      alert('✅ ยืนยันคำสั่งซื้อเรียบร้อยแล้ว!');
+      this.orderItems = [];
+    }
   }
 
   getTotal(): number {

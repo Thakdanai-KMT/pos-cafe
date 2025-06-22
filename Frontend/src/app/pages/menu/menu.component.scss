@@ -1,337 +1,273 @@
-/* ฟอนต์และพื้นหลัง */
-:host {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #fafafa;
-  color: #333;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 30px;
-}
 
-/* Layout หลัก */
-.menu-container {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  width: 100%;
-  height: auto;
-  min-height: 100vh;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgb(0 0 0 / 0.1);
-  overflow: hidden;
-}
-
-/* เมนูฝั่งซ้าย 70% */
-.menu-list {
-  flex: 1 1 60%;
-  padding: 30px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  background: #fefefe;
+* {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
-
-.menu-list h2 {
-  width: 100%;
-  font-size: 28px;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 20px;
-}
-
-/* การ์ดเมนู */
-.menu-item {
-  width: calc(50% - 20px); /* 2 columns */
-  cursor: pointer;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgb(0 0 0 / 0.05);
-  background: white;
+.menu-container {
   display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid transparent;
+  height: 100vh;
+  overflow: hidden;
+  padding: 20px;
+  gap: 20px;
+  box-sizing: border-box;
+  background: #f3ece3; /* โทนเบจน้ำตาลอ่อน */
+  color: #3e2f23;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.menu-item:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.12);
-  border-color: #27ae60;
+/* ซ้าย: เมนูสินค้า */
+.menu-list {
+  flex: 1 1 60%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #fffaf4; /* น้ำตาลอ่อนมาก */
+  padding: 15px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(80, 60, 40, 0.05);
+}
+
+.menu-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 10px;
+
+  /* Scrollbar แบบ custom */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #f3ece3;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #b89976;
+    border-radius: 10px;
+    border: 2px solid #f3ece3;
+  }
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+/* เมนูไอเทม */
+.menu-item {
+  position: relative;
+  overflow: hidden;
+  background: #fdf7f0;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 1px 5px rgba(80, 60, 40, 0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  &:hover,
+  &:focus {
+    box-shadow:
+      0 8px 15px rgba(184, 139, 74, 0.25),
+      0 4px 10px rgba(80, 60, 40, 0.15);
+    background-color: #f7efd7;
+    transform: translateY(-4px) scale(1.05);
+    outline: none;
+  }
+
+  /* Ripple effect */
+  &::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    background: rgba(184, 139, 74, 0.3);
+    top: 50%;
+    left: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.8s ease;
+  }
+  &:active::after {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    transition: 0s;
+  }
+
+  /* สถานะ selected */
+  &.selected {
+    box-shadow: 0 0 15px 3px #b88b4a;
+    background-color: #f8f1dc;
+    transform: scale(1.05);
+  }
 }
 
 .menu-image {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   object-fit: cover;
-  border-radius: 15px;
-  margin-right: 25px;
-  flex-shrink: 0;
-  box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid #d6c2b1;
 }
 
 .menu-info {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  gap: 4px;
 }
 
-.menu-name {
-  font-weight: 700;
-  font-size: 20px;
-  color: #2c3e50;
-  margin-bottom: 8px;
-  user-select: none;
-}
-
-.menu-price {
-  font-size: 16px;
-  color: #27ae60;
-  font-weight: 600;
-  user-select: none;
-}
-
-/* รายการที่เลือกฝั่งขวา 30% */
+/* ขวา: สรุปคำสั่งซื้อ */
 .order-summary {
-  flex: 1 1 40%;
-  padding: 30px;
+  width: 40%;
+  max-width: 500px;
+  min-width: 350px;
+  background: transparent;
+  padding: 0;
+  gap: 20px;
   display: flex;
   flex-direction: column;
-  background: #f9f9f9;
-  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+
+  /* Scrollbar แบบ custom */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #a07b53;
+    border-radius: 10px;
+    border: 2px solid transparent;
+  }
 }
 
-.order-summary h2 {
-  font-size: 26px;
-  font-weight: 700;
-  color: #2c3e50;
-  margin-bottom: 20px;
-  user-select: none;
+.order-card {
+  background: #fffaf5;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(80, 60, 40, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.order-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
 }
 
 .order-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 10px;
-  margin-bottom: 15px;
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 1px 6px rgb(0 0 0 / 0.08);
-  user-select: none;
-  transition: background-color 0.15s ease;
+  background: #f7ede5;
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 1px 4px rgba(80, 60, 40, 0.05);
+  margin-bottom: 10px;
 }
 
-.order-item:hover {
-  background-color: #e9f5ea;
+.item-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  justify-content: space-between;
 }
 
 .item-name {
   font-weight: 600;
-  font-size: 17px;
-  color: #34495e;
-  max-width: 120px;
+  flex: 1 1 auto;
+  min-width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.item-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.item-controls button {
-  background: #27ae60;
+.item-row button {
+  position: relative;
+  overflow: hidden;
+  padding: 4px 8px;
+  font-size: 1rem;
   border: none;
-  color: white;
-  font-size: 18px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+  border-radius: 5px;
+  background: #e8dcd2;
+  color: #5c4433;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  user-select: none;
+  box-shadow: 0 2px 5px rgba(80, 60, 40, 0.1);
+  transition: background-color 0.25s ease, transform 0.15s ease, box-shadow 0.25s ease;
 }
 
-.item-controls button:hover {
-  background-color: #1e8449;
+.item-row button:hover {
+  background: #d6c1ae;
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(80, 60, 40, 0.15);
 }
 
-.item-controls span {
-  min-width: 28px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 16px;
-  color: #2c3e50;
-  user-select: none;
-}
-
-.item-controls button:last-child {
-  background-color: #e74c3c;
-  font-size: 14px;
-  width: auto;
-  padding: 5px 12px;
-  border-radius: 6px;
-  font-weight: 600;
-}
-
-.item-controls button:last-child:hover {
-  background-color: #c0392b;
-}
-
-.order-total {
-  margin-top: auto;
-  font-size: 22px;
-  font-weight: 700;
-  color: #27ae60;
-  text-align: right;
-  margin-bottom: 25px;
-  user-select: none;
-}
-
-/* ปุ่มยืนยัน */
-.confirm-button {
-  align-self: flex-end;
-  background-color: #27ae60;
-  color: white;
-  font-size: 18px;
-  font-weight: 700;
-  border: none;
-  padding: 14px 40px;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  user-select: none;
-}
-
-.confirm-button:disabled {
-  background-color: #a5d6a7;
-  cursor: not-allowed;
-}
-
-.confirm-button:not(:disabled):hover {
-  background-color: #1e8449;
-}
-
-.clear-button {
-  background-color: #e74c3c;
-  color: white;
-  padding: 12px 25px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 18px;
-  font-weight: 700;
-  transition: background-color 0.3s ease;
-}
-
-.clear-button:hover {
-  background-color: #c0392b;
-}
-
-.order-actions {
-  padding: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  border-top: 1px solid #ddd;
-  box-sizing: border-box;
+.item-row button:active {
+  transform: scale(0.95);
+  box-shadow: none;
 }
 
 .item-total {
-  margin-left: 20px;
+  font-weight: 500;
+  min-width: 60px;
+  text-align: right;
+}
+
+/* ปุ่มล่าง */
+.order-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.clear-button,
+.confirm-button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
   font-weight: bold;
-  color: #333;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* แสดงผลสำหรับแท็บเล็ต */
-@media (max-width: 1024px) {
-  .menu-container {
-    flex-direction: column;
-  }
-
-  .menu-list,
-  .order-summary {
-    flex: 1 1 100%;
-    width: 100%;
-  }
-
-  .menu-item {
-    width: 100%;
-  }
-
-  .order-actions {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .confirm-button,
-  .clear-button {
-    width: 100%;
-    max-width: 300px;
-  }
+.clear-button {
+  background: #f8d7d1;
+  color: #8c2f2f;
+  box-shadow: 0 3px 6px rgba(140, 47, 47, 0.3);
 }
 
-/* แสดงผลมือถือ */
-@media (max-width: 600px) {
-  .menu-list,
-  .order-summary {
-    padding: 15px;
-    max-height: 80vh;
-    overflow-y: auto;
-  }
+.clear-button:hover,
+.clear-button:focus {
+  background: #d9635c;
+  color: #fff;
+  box-shadow: 0 6px 12px rgba(217, 99, 92, 0.6);
+  outline: none;
+}
 
-  .menu-item {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    padding: 10px;
-  }
+.confirm-button {
+  background: #dce7d0;
+  color: #305e29;
+  box-shadow: 0 3px 6px rgba(48, 94, 41, 0.3);
+}
 
-  .menu-image {
-    width: 80px;
-    height: 80px;
-    margin-right: 0;
-    margin-bottom: 10px;
-  }
-
-  .menu-name {
-    font-size: 16px;
-  }
-
-  .menu-price {
-    font-size: 14px;
-  }
-
-  .item-controls {
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-
-  .item-controls button {
-    width: 28px;
-    height: 28px;
-    font-size: 16px;
-  }
-
-  .clear-button,
-  .confirm-button {
-    font-size: 16px;
-    padding: 10px 20px;
-    width: 100%;
-  }
-
-  .order-total {
-    font-size: 18px;
-    text-align: center;
-  }
-
-  .item-name {
-    max-width: 100%;
-  }
+.confirm-button:hover,
+.confirm-button:focus {
+  background: #7ba255;
+  color: #fff;
+  box-shadow: 0 6px 12px rgba(123, 162, 85, 0.7);
+  outline: none;
 }
