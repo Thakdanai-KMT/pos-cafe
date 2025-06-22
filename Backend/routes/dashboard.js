@@ -1,5 +1,4 @@
 const express = require('express');
-const multer = require('multer'); // middleware สำหรับรับ multipart/form-data
 const { createClient } = require('@supabase/supabase-js');
 const router = express.Router();
 
@@ -8,54 +7,83 @@ const supabase = createClient(
   process.env.SUPABASE_KEY
 );
 
-// ตั้งค่า multer เก็บไฟล์ชั่วคราวใน memory
-const upload = multer({ storage: multer.memoryStorage() });
+// Utility: คืนค่า timestamp ของช่วงเวลาวัน, สัปดาห์, เดือน
+function getRanges() {
+  const now = new Date();
 
-// POST /api/products/upload - อัปโหลดรูปภาพพร้อมข้อมูลสินค้า
-router.post('/upload', upload.single('image'), async (req, res) => {
+  // วันเริ่มต้นและสิ้นสุดของวันนี้
+  const startDay = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const endDay = new Date(startDay);
+  endDay.setDate(endDay.getDate() + 1);
+
+  // วันเริ่มต้นของสัปดาห์ (เริ่มจันทร์) และวันถัดไปของอาทิตย์สุดท้าย
+  const dayOfWeek = startDay.getDay(); // 0=อาทิตย์, 1=จันทร์
+  const diffToMonday = (dayOfWeek + 6) % 7; // ปรับให้จันทร์เป็นวันแรก (0)
+  const startWeek = new Date(startDay);
+  startWeek.setDate(startWeek.getDate() - diffToMonday);
+  const endWeek = new Date(startWeek);
+  endWeek.setDate(endWeek.getDate() + 7);
+
+  // วันเริ่มต้นและสิ้นสุดของเดือน
+  const startMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+
+  return {
+    day: { start: startDay.toISOString(), end: endDay.toISOString() },
+    week: { start: startWeek.toISOString(), end: endWeek.toISOString() },
+    month: { start: startMonth.toISOString(), end: endMonth.toISOString() },
+  };
+}
+
+async function getSalesAndTopProducts(range) {
+  // ดึงยอดขายรวมช่วงเวลา
+  const { data: orders, error: orderErr } = await supabase
+    .from('orders')
+    .select('total_amount')
+    .gte('created_at', range.start)
+    .lt('created_at', range.end);
+
+  if (orderErr) throw orderErr;
+
+  const totalSales = orders.reduce(
+    (sum, o) => sum + parseFloat(o.total_amount || 0),
+    0
+  );
+
+  // เรียก RPC get_top_products_by_range (ต้องสร้างใน Supabase)
+  // หรือ query join order_items + products + orders กรองช่วงเวลา
+  const { data: topProducts, error: topErr } = await supabase.rpc(
+    'get_top_products_by_range',
+    {
+      start_date: range.start,
+      end_date: range.end,
+    }
+  );
+
+  if (topErr) throw topErr;
+
+  return { totalSales, topProducts };
+}
+
+// GET /api/dashboard/summary-all
+router.get('/summary-all', async (req, res) => {
   try {
-    const file = req.file; // ไฟล์ภาพที่รับมา
-    const { name, price } = req.body; // ข้อมูลสินค้าอื่น ๆ
+    const ranges = getRanges();
 
-    if (!file) {
-      return res.status(400).json({ error: 'No image file uploaded' });
-    }
+    const dayData = await getSalesAndTopProducts(ranges.day);
+    const weekData = await getSalesAndTopProducts(ranges.week);
+    const monthData = await getSalesAndTopProducts(ranges.month);
 
-    // ตั้งชื่อไฟล์เพื่ออัปโหลดใน Storage
-    const fileExt = file.originalname.split('.').pop();
-    const fileName = `${Date.now()}.${fileExt}`;
+    res.json({
+      todaySales: dayData.totalSales,
+      todayTop: dayData.topProducts,
 
-    // อัปโหลดไฟล์ไป Supabase Storage bucket 'images'
-    const { error: uploadError } = await supabase.storage
-      .from('images')
-      .upload(fileName, file.buffer, {
-        contentType: file.mimetype,
-        upsert: false,
-      });
+      weekSales: weekData.totalSales,
+      weekTop: weekData.topProducts,
 
-    if (uploadError) {
-      return res.status(500).json({ error: uploadError.message });
-    }
-
-    // ดึง public URL ของไฟล์
-    const { publicURL, error: urlError } = supabase.storage
-      .from('images')
-      .getPublicUrl(fileName);
-
-    if (urlError) {
-      return res.status(500).json({ error: urlError.message });
-    }
-
-    // บันทึกข้อมูลสินค้าและ URL ลงในตาราง products
-    const { data, error: insertError } = await supabase
-      .from('products')
-      .insert([{ name, price, image_url: publicURL }]);
-
-    if (insertError) {
-      return res.status(500).json({ error: insertError.message });
-    }
-
-    res.status(201).json({ message: 'Product created', product: data[0] });
+      monthSales: monthData.totalSales,
+      monthTop: monthData.topProducts,
+    });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
