@@ -97,7 +97,7 @@ export class MenuComponent implements OnInit {
   async confirmOrder() {
     const confirmed = await this.popupService.confirm('ยืนยันการสั้งซื้อ?');
     if (confirmed) {
-      alert('✅ ยืนยันคำสั่งซื้อเรียบร้อยแล้ว!');
+      this.popupService.success();
       this.orderItems = [];
     }
   }

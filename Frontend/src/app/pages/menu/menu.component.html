@@ -35,7 +35,7 @@
             <span>{{ item.quantity }}</span>
             <button (click)="increase(item)">+</button>
             <span class="item-total">{{ item.sale_price * item.quantity }} ฿</span>
-            <button (click)="remove(item)">🗑️</button>
+            <button (click)="remove(item)">ยกเลิก</button>
           </div>
         </div>
       </div>
@@ -45,13 +45,13 @@
 
     <div class="order-card">
       <div class="order-actions">
-        <button (click)="clearOrder()" class="clear-button">❌ ล้างคำสั่งซื้อ</button>
+        <button (click)="clearOrder()" class="clear-button"> ล้างคำสั่งซื้อ</button>
         <button
           class="confirm-button"
           (click)="confirmOrder()"
           [disabled]="orderItems.length === 0"
         >
-          ✅ ยืนยันคำสั่งซื้อ
+           ยืนยันคำสั่งซื้อ
         </button>
       </div>
     </div>
