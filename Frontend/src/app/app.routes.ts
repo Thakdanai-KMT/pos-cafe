@@ -17,6 +17,8 @@ export const routes: Routes = [
       { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent) },
       { path: 'menu', loadComponent: () => import('./pages/menu/menu.component').then(m => m.MenuComponent) },
       { path: 'report', loadComponent: () => import('./pages/report/report.component').then(m => m.ReportComponent) },
+      { path: 'adminmenu', loadComponent: () => import('./pages/admin-menu/admin-menu.component').then(m => m.AdminMenuComponent) },
+
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' } // default ภายใต้ layout
     ]
   },

@@ -1,0 +1,66 @@
+<h2>เพิ่มเมนูใหม่</h2>
+<form (ngSubmit)="addItem()" style="margin-bottom: 20px;">
+  <input [(ngModel)]="newItem.name" name="name" placeholder="ชื่อเมนู" required />
+  <input type="number" [(ngModel)]="newItem.sale_price" name="sale_price" placeholder="ราคา" required />
+  <select [(ngModel)]="newItem.category_id" name="category_id" required>
+    <option value="" disabled>เลือกประเภทสินค้า</option>
+    <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+  </select>
+
+  <input type="file" (change)="onFileSelected($event)" />
+  <img *ngIf="previewImage" [src]="previewImage" alt="พรีวิวรูป" width="100" />
+
+  <button type="submit">เพิ่ม</button>
+</form>
+
+<h2>เมนูทั้งหมด</h2>
+<table>
+  <thead>
+    <tr>
+      <th>รูป</th>
+      <th>ชื่อ</th>
+      <th>ราคา</th>
+      <th>ประเภท</th>
+      <th>จัดการ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of menuItems">
+      <ng-container *ngIf="editingItem && editingItem.id === item.id; else displayNormal">
+        <td colspan="3">
+          <input [(ngModel)]="editingItem.name" />
+          <input type="number" [(ngModel)]="editingItem.sale_price" />
+          <!-- แก้ไขรูปเป็นแบบอัพโหลดไฟล์ -->
+          <input type="file" (change)="onEditFileSelected($event)" />
+          <img *ngIf="previewEditImage; else showOldImage" [src]="previewEditImage" alt="พรีวิวรูปแก้ไข" width="100" />
+          <ng-template #showOldImage>
+            <img *ngIf="editingItem.image" [src]="editingItem.image" alt="รูปเดิม" width="100" />
+          </ng-template>
+        </td>
+        <td>
+          <select [(ngModel)]="editingItem.category_id" required>
+            <option value="" disabled>เลือกประเภทสินค้า</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+          </select>
+        </td>
+        <td>
+          <button (click)="updateItem()">บันทึก</button>
+          <button (click)="cancelEdit()">ยกเลิก</button>
+        </td>
+      </ng-container>
+
+      <ng-template #displayNormal>
+        <td>
+          <img [src]="item.image || 'assets/no-image.png'" width="50" />
+        </td>
+        <td>{{ item.name }}</td>
+        <td>{{ item.sale_price }} บาท</td>
+        <td>{{ getCategoryName(item.category_id) }}</td>
+        <td>
+          <button (click)="editItem(item)">แก้ไข</button>
+          <button (click)="deleteItem(item)">ลบ</button>
+        </td>
+      </ng-template>
+    </tr>
+  </tbody>
+</table>
